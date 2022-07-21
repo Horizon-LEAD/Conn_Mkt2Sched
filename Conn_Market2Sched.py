@@ -76,15 +76,13 @@ def actually_run_module(args):
     # for cepNo in range(len(cepList)):
     #     cepNodeDict[cepList[cepNo]] = cepNodes[cepNo]
     
-    
-    
-    
+
     
     ## Starts the connection
-    parcels_hubspoke = pd.read_csv(varDict['parcels_hubspoke']); parcels_hubspoke.index = parcels_hubspoke['Parcel_ID']
-    parcel_trips_HS_delivery = pd.read_csv(varDict['parcel_trips_HS_delivery'])
-    parcel_trips_HS_pickup =  pd.read_csv(varDict['parcel_trips_HS_pickup'])
-
+    parcels_tripsL2L = pd.read_csv(varDict['parcels_tripsL2L']); parcels_tripsL2L.index = parcels_tripsL2L['Parcel_ID']
+    parcel_trips_L2L_delivery = pd.read_csv(varDict['parcel_trips_L2L_delivery'])
+    parcel_trips_L2L_pickup =  pd.read_csv(varDict['parcel_trips_L2L_pickup'])
+    parcel_HubSpoke        =  pd.read_csv(varDict['parcel_HubSpoke'])
     
     '''
     Separate the hubhub since they have different treatment in the shipment module
@@ -93,7 +91,7 @@ def actually_run_module(args):
     SHOULD I ADD IT IN THE SAME FILE AS THE OTHER AND SEPARATE IN THE SCHEDULING??
     
     '''
-    parcels_hubhub = parcels_hubspoke[((parcels_hubspoke['Network'] == 'conventional') & (parcels_hubspoke['Type'] == 'consolidated'))]
+    parcels_hubhub = parcels_tripsL2L[((parcels_tripsL2L['Network'] == 'conventional') & (parcels_tripsL2L['Type'] == 'consolidated'))]
     
     #  I am adding this part
     
@@ -123,8 +121,11 @@ def actually_run_module(args):
     
     # parcels_hubspoke_delivery = parcels_hubspoke_delivery.rename(columns={'D_DepotZone': 'O_zone', 'D_DepotNumber': 'DepotNumber'})
     
+    #L2L delivery:
+    parcels_hubspoke_delivery = parcel_trips_L2L_delivery
     
-    parcels_hubspoke_delivery = parcel_trips_HS_delivery
+    # print('list(parcels_hubspoke_delivery.columns): ',list(parcels_hubspoke_delivery.columns))
+    # print('')
     
     Gemeenten = varDict['Gemeenten_studyarea']
     if len(Gemeenten) > 1:  # If there are more than 1 gemente in the list
@@ -154,7 +155,26 @@ def actually_run_module(args):
     
     
     
-    parcels_hubspoke_delivery = parcels_hubspoke_delivery.append(parcel_trips_HS_delivery, ignore_index=True,sort=False)
+    # parcels_hubspoke_delivery = parcels_hubspoke_delivery.append(parcel_trips_L2L_delivery, ignore_index=True,sort=False)  # Por algun motivo duplicabamos los deliveries
+    
+    
+    ''' Here we add the parcels that are not L2L'''
+    
+    
+    # parcel_HubSpoke['DepotNumber']= parcel_HubSpoke['O_DepotNumber']
+    parcel_HubSpoke['Network']='conventional'
+    parcel_HubSpoke['Type']='tour-based'
+    
+
+    cols =  ['Parcel_ID', 'O_zone', 'D_zone', 'DepotNumber', 'CEP', 'VEHTYPE', 'Network', 'Type']    
+
+
+    
+    parcel_HubSpoke = parcel_HubSpoke[cols]
+    
+    
+    parcels_hubspoke_delivery = parcels_hubspoke_delivery.append(parcel_HubSpoke)
+    
     parcels_hubspoke_delivery = parcels_hubspoke_delivery.drop(['Network', 'Type'], axis=1)
     parcels_hubspoke_delivery['Task'] = ['Delivery'] * len(parcels_hubspoke_delivery)
 
@@ -164,7 +184,7 @@ def actually_run_module(args):
     # parcels_hubspoke_pickup = parcels_hubspoke.drop(['D_DepotZone', 'D_zone', 'D_DepotNumber'], axis=1)
     # parcels_hubspoke_pickup = parcels_hubspoke_pickup.rename(columns={'O_DepotZone': 'D_zone', 'O_DepotNumber': 'DepotNumber'})
     
-    parcels_hubspoke_pickup = parcel_trips_HS_pickup
+    parcels_hubspoke_pickup = parcel_trips_L2L_pickup
     
     parcels_hubspoke_pickup['Task'] = ['PickUp'] * len(parcels_hubspoke_pickup)
     # Let's say that only 10% of the parcels that are demanded in ZH are actually picked up
@@ -194,7 +214,7 @@ def actually_run_module(args):
             Geemente = Gemeenten
         parcels_hubspoke_pickup = parcels_hubspoke_pickup[parcels_hubspoke_pickup['O_zone'].isin(zones['AREANR'][zones['GEMEENTEN'].isin(Geemente)])] #only take parcels picked-up in the study area
     
-    parcels_hubspoke_pickup = parcels_hubspoke_pickup.append(parcel_trips_HS_pickup, ignore_index=True,sort=False)
+    parcels_hubspoke_pickup = parcels_hubspoke_pickup.append(parcel_trips_L2L_pickup, ignore_index=True,sort=False)
     parcels_hubspoke_pickup = parcels_hubspoke_pickup.drop(['Network', 'Type'], axis=1)
     
     parcels_hubspoke_pickup = parcels_hubspoke_pickup.rename(columns={'O_zone': 'D_zone', 'D_zone': 'O_zone'}) #Scheduling module only works originating from depots
@@ -221,9 +241,24 @@ def generate_args(method):
     if method == 'from_file':   
             
         if sys.argv[0] == '':
-            params_file = open(f'{datapath}Input/Params_ParcelGen.txt')
+            params_file = open(f'{datapath}/Input/Params_Conn_Market2Sched.txt')
+            varDict['LABEL'	]			= 'Test'			
+            varDict['DATAPATH']			= datapath							
+            varDict['INPUTFOLDER']		= f'{datapath}'+'/'+ 'Input' +'/' 				
+            varDict['OUTPUTFOLDER']		= f'{datapath}'+'/'+ 'Output' +'/'				
             
-            
+            varDict['parcels_tripsL2L'] 		= varDict['INPUTFOLDER'] + 'ParcelDemand_ParcelTripsL2L_TRA_Base.csv'
+            varDict['parcel_trips_L2L_delivery']		= varDict['INPUTFOLDER'] + 'ParcelDemand_L2L_delivery_TRA_Base.csv'
+            varDict['parcel_trips_L2L_pickup']			= varDict['INPUTFOLDER'] + 		'ParcelDemand_L2L_pickup_TRA_Base.csv'	
+            varDict['parcel_HubSpoke']			= varDict['INPUTFOLDER'] + 		'ParcelDemand_ParcelHubSpoke_TRA_Base.csv'	
+          
+            # varDict['SKIMTIME'] 		= varDict['INPUTFOLDER'] + sys.argv[6] #'skimTijd_new_REF.mtx' 		
+            # varDict['SKIMDISTANCE']		= varDict['INPUTFOLDER'] + sys.argv[7] #'skimAfstand_new_REF.mtx'	
+            varDict['ZONES']			= varDict['INPUTFOLDER'] + 'Zones_v4.shp' #'Zones_v4.shp'		
+            # varDict['SEGS']				= varDict['INPUTFOLDER'] + sys.argv[9] #'SEGS2020.csv'				
+            varDict['PARCELNODES']		= varDict['INPUTFOLDER'] + 'parcelNodes_v2.shp' #'parcelNodes_v2.shp'        
+
+    
         else:  # This is the part for line cod execution
             locationparam = f'{datapath}' +'/'+ sys.argv[2] +'/' + sys.argv[4]
             params_file = open(locationparam)
@@ -232,17 +267,18 @@ def generate_args(method):
             varDict['INPUTFOLDER']		= f'{datapath}'+'/' + sys.argv[2] +'/' 				
             varDict['OUTPUTFOLDER']		= f'{datapath}'+'/' + sys.argv[3] +'/'			
             
-            varDict['parcels_hubspoke'] 		= varDict['INPUTFOLDER'] + sys.argv[5] #'skimTijd_new_REF.mtx' 		
-            varDict['parcel_trips_HS_delivery']		= varDict['INPUTFOLDER'] + sys.argv[6] #'skimAfstand_new_REF.mtx'	
-            varDict['parcel_trips_HS_pickup']			= varDict['INPUTFOLDER'] + sys.argv[7] #'Zones_v4.shp'				
+            varDict['parcels_tripsL2L'] 		= varDict['INPUTFOLDER'] + sys.argv[5] #'skimTijd_new_REF.mtx' 		
+            varDict['parcel_trips_L2L_delivery']		= varDict['INPUTFOLDER'] + sys.argv[6] #'skimAfstand_new_REF.mtx'	
+            varDict['parcel_trips_L2L_pickup']			= varDict['INPUTFOLDER'] + sys.argv[7] #'Zones_v4.shp'				
+            varDict['parcel_HubSpoke']			= varDict['INPUTFOLDER'] + 		 sys.argv[8]
             
             # varDict['SKIMTIME'] 		= varDict['INPUTFOLDER'] + sys.argv[6] #'skimTijd_new_REF.mtx' 		
             # varDict['SKIMDISTANCE']		= varDict['INPUTFOLDER'] + sys.argv[7] #'skimAfstand_new_REF.mtx'	
-            varDict['ZONES']			= varDict['INPUTFOLDER'] + sys.argv[8] #'Zones_v4.shp'				
+            varDict['ZONES']			= varDict['INPUTFOLDER'] + sys.argv[9] #'Zones_v4.shp'				
             # varDict['SEGS']				= varDict['INPUTFOLDER'] + sys.argv[9] #'SEGS2020.csv'				
-            varDict['PARCELNODES']		= varDict['INPUTFOLDER'] + sys.argv[9] #'parcelNodes_v2.shp'
-            
-            
+            varDict['PARCELNODES']		= varDict['INPUTFOLDER'] + sys.argv[10] #'parcelNodes_v2.shp'
+            # So it shuts up the warnings (remove when running in spyder)
+            pd.options.mode.chained_assignment = None            
             
             
             
