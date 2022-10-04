@@ -110,6 +110,7 @@ def actually_run_module(args):
     
     
     # I stop adding  
+    # parcels_hubhub = parcels_hubhub.drop_duplicates()
     parcels_hubhub.to_csv(f"{varDict['OUTPUTFOLDER']}ParcelDemand_Hub2Hub_{varDict['LABEL']}.csv", index=False)
 
 
@@ -219,7 +220,7 @@ def actually_run_module(args):
     
     parcels_hubspoke_pickup = parcels_hubspoke_pickup.rename(columns={'O_zone': 'D_zone', 'D_zone': 'O_zone'}) #Scheduling module only works originating from depots
     parcels_hubspoke_pickup['DepotNumber'] = (parcels_hubspoke_pickup['DepotNumber']+1000).astype(int)
-    
+    parcels_hubspoke_pickup = parcels_hubspoke_pickup.drop_duplicates()
     
     
     
@@ -242,15 +243,15 @@ def generate_args(method):
             
         if sys.argv[0] == '':
             params_file = open(f'{datapath}/Input/Params_Conn_Market2Sched.txt')
-            varDict['LABEL'	]			= 'Test'			
+            varDict['LABEL'	]			= 'FrancescoTest'			
             varDict['DATAPATH']			= datapath							
             varDict['INPUTFOLDER']		= f'{datapath}'+'/'+ 'Input' +'/' 				
             varDict['OUTPUTFOLDER']		= f'{datapath}'+'/'+ 'Output' +'/'				
             
-            varDict['parcels_tripsL2L'] 		= varDict['INPUTFOLDER'] + 'ParcelDemand_ParcelTripsL2L_TRA_Base.csv'
-            varDict['parcel_trips_L2L_delivery']		= varDict['INPUTFOLDER'] + 'ParcelDemand_L2L_delivery_TRA_Base.csv'
-            varDict['parcel_trips_L2L_pickup']			= varDict['INPUTFOLDER'] + 		'ParcelDemand_L2L_pickup_TRA_Base.csv'	
-            varDict['parcel_HubSpoke']			= varDict['INPUTFOLDER'] + 		'ParcelDemand_ParcelHubSpoke_TRA_Base.csv'	
+            varDict['parcels_tripsL2L'] 		= varDict['INPUTFOLDER'] + 'ParcelDemand_ParcelTripsL2L_FrancescoTest.csv'
+            varDict['parcel_trips_L2L_delivery']		= varDict['INPUTFOLDER'] + 'ParcelDemand_L2L_delivery_FrancescoTest.csv'
+            varDict['parcel_trips_L2L_pickup']			= varDict['INPUTFOLDER'] + 		'ParcelDemand_L2L_pickup_FrancescoTest.csv'	
+            varDict['parcel_HubSpoke']			= varDict['INPUTFOLDER'] + 		'ParcelDemand_ParcelHubSpoke_FrancescoTest.csv'	
           
             # varDict['SKIMTIME'] 		= varDict['INPUTFOLDER'] + sys.argv[6] #'skimTijd_new_REF.mtx' 		
             # varDict['SKIMDISTANCE']		= varDict['INPUTFOLDER'] + sys.argv[7] #'skimAfstand_new_REF.mtx'	
