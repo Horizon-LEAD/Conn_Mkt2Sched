@@ -1,1 +1,0 @@
-python3 Conn_Market2Sched.py Test Input Output Params_Conn_Market2Sched.txt ParcelDemand_ParcelTrips_Test.csv ParcelDemand_HS_delivery_Test.csv ParcelDemand_HS_pickup_Test.csv Zones_v4.shp parcelNodes_v2.shp                                                   
