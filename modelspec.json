@@ -3,10 +3,8 @@
     "description":"Parcel Market To Tour",
     "version": "1.0.1",
     "status":"draft",
-    "dockerImage":"registry.gitlab.com/inlecom/lead/models/mkt2tour:latest",
-    "url": "https:/https://gitlab.com/inlecom/lead/models/parcelmkt-2-parceltour",
-    "fromModelId": 3,
-    "toModelId": 4,
+    "dockerImage":"registry.gitlab.com/inlecom/lead/models/parcelmkt-2-parceltour:latest",
+    "url": "https://github.com/Horizon-LEAD/Conn_Mkt2Tour",
     "modelData":  [
         {
             "name": "Parcel Demand Parcel Trips L2L",
@@ -17,7 +15,6 @@
             "isOptional": false,
             "inputType": "CLI",
             "chartType": "NONE",
-            "refModelDataId": 7,
             "modelDataType": {
                 "name": "file",
                 "description": "",
@@ -43,7 +40,6 @@
             "isOptional": false,
             "inputType": "CLI",
             "chartType": "NONE",
-            "refModelDataId": 7,
             "modelDataType": {
                 "name": "file",
                 "description": "",
@@ -69,7 +65,6 @@
             "isOptional": false,
             "inputType": "CLI",
             "chartType": "NONE",
-            "refModelDataId": 7,
             "modelDataType": {
                 "name": "file",
                 "description": "",
@@ -95,7 +90,6 @@
             "isOptional": false,
             "inputType": "CLI",
             "chartType": "NONE",
-            "refModelDataId": 7,
             "modelDataType": {
                 "name": "file",
                 "description": "",
@@ -113,9 +107,9 @@
             }
         },
         {
-            "name": "Area shape file",
+            "name": "Zones ZIP shapefiles",
             "variableName": "area",
-            "description": "Shapefile of the city. The areas delimited should be linked with the areas in the Socioeconomic Data file.",
+            "description": "Shapefile of the city in a zip archive",
             "isOutput": false,
             "isOutputDir": false,
             "isOptional": false,
