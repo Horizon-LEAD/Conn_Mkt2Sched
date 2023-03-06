@@ -9,13 +9,13 @@ After the install is completed, an executable `mkt2tour` will be available to th
 Furthermore, a `Dockerfile` is provided so that the user can package the parcel generation model. To build the image the following command must be issued from the project's root directory:
 
 ```
-docker build -t mkt2tour:latest .
+docker build -t parcelmkt-2-parceltour:latest .
 ```
 
-## Usage 
+## Usage
 
 ```
-mkt2tour -h                                                                                                                                  19.9s  2023-02-20 19:26:49
+$ mkt2tour -h
 usage: mkt2tour [-h] [-v] [--flog] [-e ENV] [--gui] PARCELTRIPS PARCELDELIVERY PARCELPICKUP ZONES PARCELNODES OUTDIR
 
 mkt2tour connector
@@ -51,14 +51,13 @@ mkt2tour -vvv --env .env \
 ```
 
 ```
-docker run --rm \     
-  -v $PWD/sample-data/input:/data/input \
-  -v $PWD/sample-data/output:/data/output \
+docker run --rm \
+  -v $PWD/sample-data:/data \
   --env-file .env \
-  mkt2tour:latest \
-  /data/input/ParcelDemand_ParcelTrips_Wksp.csv \
-  /data/input/ParcelDemand_HS_delivery_Wksp.csv \
-  /data/input/ParcelDemand_HS_pickup_Wksp.csv \
+  parcelmkt-2-parceltour:latest \
+  /data/input/ParcelDemand_ParcelTrips.csv \
+  /data/input/ParcelDemand_HS_delivery.csv \
+  /data/input/ParcelDemand_HS_pickup.csv \
   /data/input/ParcelDemand_ParcelHubSpoke_CS_ETS.csv \
   /data/input/Zones_v4.zip \
   /data/input/parcelNodes_v2.zip \
