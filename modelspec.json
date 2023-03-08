@@ -1,6 +1,6 @@
 {
-    "name": "Parcel Market To Tour",
-    "description":"Parcel Market To Tour",
+    "name": "ParcelMarket-2-ParcelTourFormation",
+    "description":"Connect the output of parcel market to the input of parcel tour formation",
     "version": "1.0.1",
     "status":"draft",
     "dockerImage":"registry.gitlab.com/inlecom/lead/models/parcelmkt-2-parceltour:latest",
