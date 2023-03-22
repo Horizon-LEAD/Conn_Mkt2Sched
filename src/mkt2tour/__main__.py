@@ -1,5 +1,4 @@
-"""
-mkt2tour connector
+"""Main module - entrypoint
 """
 
 import logging
@@ -20,6 +19,7 @@ LOG_FILE_MAX_BYTES = 50e6
 LOG_MSG_FMT = "%(asctime)s %(levelname)-8s %(name)s \
 %(filename)s#L%(lineno)d %(message)s"
 LOG_DT_FMT = "%Y-%m-%d %H:%M:%S"
+MODEL_DESC="Prepares the data from Parcel Market for Parcel Tour Formation model"
 
 logger = logging.getLogger("mkt2tour")
 
@@ -71,16 +71,21 @@ def main():
     """
 
     # command line argument parsing
-    parser = ArgumentParser(description=__doc__,
+    parser = ArgumentParser(description=MODEL_DESC,
                             formatter_class=RawDefaultsHelpFormatter)
 
-    parser.add_argument('parcels_tripsL2L', type=strfile, help='The path of the parcel trips file (csv)')
-    parser.add_argument('parcel_trips_L2L_delivery', type=strfile, help='The path of the parcel delivery file (csv)')
-    parser.add_argument('parcel_trips_L2L_pickup', type=strfile, help='The path of the parcel pickup file (csv)')
-    parser.add_argument('parcel_HubSpoke', type=strfile, help='The path of the parcel hubspoke file (csv)')
-    parser.add_argument('ZONES', type=strfile, help='The path of the area shape file (shp)')
+    parser.add_argument('parcels_tripsL2L', type=strfile,
+                        help='The path of the parcel trips file (csv)')
+    parser.add_argument('parcel_trips_L2L_delivery', type=strfile,
+                        help='The path of the parcel delivery file (csv)')
+    parser.add_argument('parcel_trips_L2L_pickup', type=strfile,
+                        help='The path of the parcel pickup file (csv)')
+    parser.add_argument('parcel_HubSpoke', type=strfile,
+                        help='The path of the parcel hubspoke file (csv)')
+    parser.add_argument('ZONES', type=strfile,
+                        help='The path of the area shape file (zip)')
     parser.add_argument('PARCELNODES', type=strfile,
-                        help='The path of the parcel nodes file (shp)')
+                        help='The path of the parcel nodes file (zip)')
     parser.add_argument('OUTDIR', type=strdir, help='The output directory')
 
     parser.add_argument('-v', '--verbosity', action='count', default=0,
@@ -89,8 +94,6 @@ def main():
                         help='Stores logs to file')
     parser.add_argument('-e', '--env', type=str, default=None,
                         help='Defines the path of the environment file')
-    parser.add_argument('--gui', action='store_true', default=False,
-                        help='Displays the graphical user interface')
 
     args = parser.parse_args(argv[1:])
 
@@ -117,7 +120,7 @@ def main():
 
     # setting of the configuration
     config = vars(args).copy()
-    _ = [config.pop(key) for key in ("verbosity", "flog", "env", "gui")]
+    _ = [config.pop(key) for key in ("verbosity", "flog", "env")]
     config_env = {}
     if args.env:
         if isfile(abspath(args.env)):
