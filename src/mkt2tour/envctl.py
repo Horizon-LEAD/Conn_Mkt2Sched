@@ -8,9 +8,8 @@ from json import loads, JSONDecodeError
 BOOL_VALUES = ('true', 't', 'on', '1', 'false', 'f', 'off', '0', "")
 BOOL_TRUE_VALUES = ('true', 't', 'on', '1')
 
-PARAMS_STR = ["LABEL"]
-PARAMS_BOOL = ["RUN_DEMAND_MODULE", "CROWDSHIPPING_NETWORK", "COMBINE_DELIVERY_PICKUP_TOUR",
-               "HYPERCONNECTED_NETWORK", "printKPI"]
+PARAMS_STR = []
+PARAMS_BOOL = []
 PARAMS_NUM = []
 PARAMS_LIST_STR = ["Gemeenten_studyarea"]
 PARAMS_LIST_BOOL = []
