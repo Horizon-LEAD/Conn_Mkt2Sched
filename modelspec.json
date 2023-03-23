@@ -1,14 +1,14 @@
 {
     "name": "ParcelMarket-2-ParcelTourFormation",
     "description":"Connect the output of parcel market to the input of parcel tour formation",
-    "version": "1.0.1",
+    "version": "1.0.0",
     "status":"draft",
     "dockerImage":"registry.gitlab.com/inlecom/lead/models/parcelmkt-2-parceltour:latest",
     "url": "https://github.com/Horizon-LEAD/Conn_Mkt2Tour",
     "modelData":  [
         {
             "name": "Parcel Demand Parcel Trips L2L",
-            "variableName": "parcel_demand_parcel_trips_l2l",
+            "variableName": "parcels_tripsL2L",
             "description": "Parcel trips L2L file produced by parcel market",
             "isOutput": false,
             "isOutputDir": false,
@@ -33,7 +33,7 @@
         },
         {
             "name": "Parcel Demand Parcel Trips L2L Delivery",
-            "variableName": "parcel_demand_parcel_trips_l2l_delivery",
+            "variableName": "parcel_trips_L2L_delivery",
             "description": "Parcel trips L2L delivery file produced by parcel market",
             "isOutput": false,
             "isOutputDir": false,
@@ -58,7 +58,7 @@
         },
         {
             "name": "Parcel Demand Parcel Trips L2L Pickup",
-            "variableName": "parcel_demand_parcel_trips_l2l_pickup",
+            "variableName": "parcel_trips_L2L_pickup",
             "description": "Parcel trips L2L pickup file produced by parcel market",
             "isOutput": false,
             "isOutputDir": false,
@@ -83,7 +83,7 @@
         },
         {
             "name": "Parcel Demand Parcel Hubspoke",
-            "variableName": "parcel_demand_parcel_hubspoke",
+            "variableName": "parcel_HubSpoke",
             "description": "Parcel Hubspoke file",
             "isOutput": false,
             "isOutputDir": false,
@@ -108,7 +108,7 @@
         },
         {
             "name": "Zones ZIP shapefiles",
-            "variableName": "area",
+            "variableName": "ZONES",
             "description": "Shapefile of the city in a zip archive",
             "isOutput": false,
             "isOutputDir": false,
@@ -133,7 +133,7 @@
         },
         {
             "name": "Parcel Nodes",
-            "variableName": "parcel_nodes",
+            "variableName": "PARCELNODES",
             "description": "Shape with the location of the distribution nodes of the couriers.",
             "isOutput": false,
             "isOutputDir": false,
@@ -145,30 +145,6 @@
                 "description": "",
                 "dataType": "file",
                 "extension": "zip",
-                "validators": [
-                    {
-                        "name": "required",
-                        "description": "required",
-                        "validatorType": "required",
-                        "value": ""
-                    }
-                ],
-                "objectKeys": []
-            }
-        },
-        {
-            "name": "Gemeenten_studyarea",
-            "variableName": "Gemeenten_studyarea",
-            "description": "Gemeenten_studyarea",
-            "isOutput": false,
-            "isOutputDir": false,
-            "isOptional": false,
-            "inputType": "ENV",
-            "chartType": "NONE",
-            "modelDataType": {
-                "name": "string",
-                "description": "",
-                "dataType": "string",
                 "validators": [
                     {
                         "name": "required",
@@ -194,6 +170,30 @@
                 "description": "",
                 "dataType": "string",
                 "extension": null,
+                "validators": [
+                    {
+                        "name": "required",
+                        "description": "required",
+                        "validatorType": "required",
+                        "value": ""
+                    }
+                ],
+                "objectKeys": []
+            }
+        },
+        {
+            "name": "Gemeenten_studyarea",
+            "variableName": "Gemeenten_studyarea",
+            "description": "Gemeenten_studyarea",
+            "isOutput": false,
+            "isOutputDir": false,
+            "isOptional": false,
+            "inputType": "ENV",
+            "chartType": "NONE",
+            "modelDataType": {
+                "name": "string",
+                "description": "",
+                "dataType": "string",
                 "validators": [
                     {
                         "name": "required",
